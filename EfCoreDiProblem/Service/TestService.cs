@@ -7,6 +7,9 @@ namespace EfCoreDiProblem.Service;
 public class TestService: ITestService
 {
     private readonly TestDbContext _context;
+    
+    public bool SameContext(TestDbContext context) => context == _context;
+    
     public TestService(TestDbContext context)
     {
         _context = context;
@@ -46,8 +49,9 @@ public class TestService: ITestService
         {
             Text = "Test - service 4"
         };
+        //_context.Items.Add(item);
+        //item.ItemListId = list.Id;
         list.Items.Add(item); // <- the list need to add the item, so its actually there when we return to the other scope!
-        _context.Items.Add(item);
         _context.SaveChanges();
     }
 }

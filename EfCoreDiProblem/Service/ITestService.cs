@@ -5,6 +5,8 @@ namespace EfCoreDiProblem.Service;
 
 public interface ITestService
 {
+
+    bool SameContext(TestDbContext context);
     void TestAddHandler(ItemList list);
 
     void TestAddHandlerToDbSet(ItemList list);

@@ -1,6 +1,7 @@
 using EfCoreDiProblem.Context;
 using EfCoreDiProblem.Model;
 using EfCoreDiProblem.Service;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,13 +14,15 @@ public class TestController : ControllerBase
 
     private readonly ILogger<TestController> _logger;
     private readonly TestDbContext _context;
+    private readonly IMediator _mediator;
     private readonly ITestService _testService;
 
-    public TestController(ILogger<TestController> logger, TestDbContext context, ITestService testService)
+    public TestController(ILogger<TestController> logger, TestDbContext context, ITestService testService, IMediator mediator)
     {
         _logger = logger;
         _context = context;
         _testService = testService;
+        _mediator = mediator;
     }
 
     [HttpGet("/TestPart1")]
@@ -263,6 +266,16 @@ public class TestController : ControllerBase
         // var state = _context.Entry(list.Items[0]).State; 
 
         return Ok("inside service..");
+    }
+        
+    [HttpGet("/Mediator1")]
+    public async Task<IActionResult> TestMediator1()
+    {
+        var cmd = new Command.Command("NAME");
+
+        await _mediator.Send(cmd);
+        
+        return Ok("mediator service done..");
     }
     
     [HttpGet("/GetItems")]

@@ -1,24 +1,28 @@
+using System.Reflection;
 using EfCoreDiProblem.Context;
 using EfCoreDiProblem.Service;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var services = builder.Services;
 // Add services to the container.
-builder.Services.AddControllers();
+services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen();
 
-builder.Services.AddDbContext<TestDbContext>(options =>
+services.AddDbContext<TestDbContext>(options =>
     {
         options.UseInMemoryDatabase("TestDb");
         options.EnableSensitiveDataLogging();
     }
 );
 
-builder.Services.AddScoped<ITestService, TestService>();
+services.AddScoped<ITestService, TestService>();
+
+services.AddMediatR(typeof(Program).GetTypeInfo().Assembly);
 
 var app = builder.Build();
 
@@ -28,6 +32,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 app.UseHttpsRedirection();
 
